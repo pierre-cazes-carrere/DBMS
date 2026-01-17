@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{% if lang == 'ar' %}rtl{% else %}ltr{% endif %}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ t.title }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+  <div class="card-title-row">
+    <div>
+      <h1>{{ t.header }}</h1>
+      <p class="subtitle">{{ t.subtitle }}</p>
+    </div>
+    <a href="{{ url_for('glossary', lang=lang) }}" class="btn-link">Glossaire</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- FILTRE PAYS -->
+  <section class="card">
+    <div class="card-title-row">
+      <h2>{{ t.filter_country }}</h2>
+
+      <div class="theme-picker" aria-label="Choix du thème">
+        <label for="theme" class="sr-only">Thème</label>
+        <select id="theme" name="theme" class="theme-select" title="Choisir un thème de couleurs">
+          <option value="agathe">Agathe (blanc → bleu)</option>
+          <option value="pearl">Perle (blanc → gris doux)</option>
+          <option value="sunrise">Aube (blanc → rose/orange)</option>
+          <option value="emerald">Émeraude sombre</option>
+          <option value="ocean">Océan profond</option>
+          <option value="violet">Violet nocturne</option>
+          <option value="sunset">Coucher de soleil</option>
+        </select>
+      </div>
+    </div>
+    <form method="get">
+      <label for="country">{{ t.filter_label_country }}</label>
+      <select id="country" name="country" onchange="this.form.submit()">
+        <option value="">{{ t.filter_all_countries }}</option>
+        {% for c in countries %}
+          <option value="{{ c }}" {% if selected_country == c %}selected{% endif %}>
+            {{ c }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <label for="lang">{{ t.language }}</label>
+      <select id="lang" name="lang" onchange="this.form.submit()">
+        <option value="fr" {% if lang == 'fr' %}selected{% endif %}>Français</option>
+        <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
+        <option value="ar" {% if lang == 'ar' %}selected{% endif %}>العربية</option>
+      </select>
+
+      <label for="power_kw">{{ t.filter_label_power }}</label>
+      <input type="number" step="0.1" id="power_kw" name="power_kw"
+             value="{{ power_kw }}" onchange="this.form.submit()">
+    </form>
+
+    {% if selected_country %}
+      <p class="small">
+        {{ t.filter_current }} <strong>{{ selected_country }}</strong>,
+        puissance : <strong>{{ power_kw }} kW</strong>.
+      </p>
+    {% else %}
+      <p class="small">{{ t.filter_none }}</p>
+    {% endif %}
+  </section>
+
+  <section class="card">
+    <h2>{{ t.context_title }}</h2>
+    <p>{{ t.context_p1 }}</p>
+    <p>{{ t.context_p2 }} <strong>{{ avg_intensity }} gCO₂/kWh</strong>.</p>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h3>{{ t.top_dirty }}</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>{{ t.country }}</th>
+            <th>{{ t.intensity }}</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for row in top_dirty %}
+          <tr>
+            <td class="text-left">{{ row.country }}</td>
+            <td>{{ "%.1f"|format(row.total_gco2_kwh) }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>{{ t.top_clean }}</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>{{ t.country }}</th>
+            <th>{{ t.intensity }}</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for row in top_clean %}
+          <tr>
+            <td class="text-left">{{ row.country }}</td>
+            <td>{{ "%.1f"|format(row.total_gco2_kwh) }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>{{ t.dataset_title }}</h2>
+    <p class="small">
+      {{ t.dataset_sub }}
+    </p>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>{{ t.country }}</th>
+            <th>{{ t.coal }}</th>
+            <th>{{ t.gas }}</th>
+            <th>{{ t.oil }}</th>
+            <th>{{ t.hydro }}</th>
+            <th>{{ t.renewable }}</th>
+            <th>{{ t.nuclear }}</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for row in preview %}
+          <tr>
+            <td class="text-left">{{ row.country }}</td>
+            <td>{{ row.coal }}</td>
+            <td>{{ row.gas }}</td>
+            <td>{{ row.oil }}</td>
+            <td>{{ row.hydro }}</td>
+            <td>{{ row.renewable }}</td>
+            <td>{{ row.nuclear }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  {% if contrib_table %}
+  <section class="card">
+    <h2>{{ t.contrib_title }} {{ selected_country }}</h2>
+    <p class="small">
+      {{ t.contrib_sub }}
+    </p>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>{{ t.source }}</th>
+            <th>{{ t.share }}</th>
+            <th>{{ t.median }}</th>
+            <th>{{ t.contrib }}</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for row in contrib_table %}
+          <tr>
+            <td class="text-left">{{ row.source }}</td>
+            <td>{{ row.share }}%</td>
+            <td>{{ row.median }}</td>
+            <td>{{ row.share }}% × {{ row.median }} = {{ row.contrib }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if total_emission is not none %}
+      <p class="small">
+        {{ t.total_emission }} {{ selected_country }} :
+        <strong>{{ total_emission }} gCO₂/kWh</strong>.
+      </p>
+    {% endif %}
+
+    {% if annual_emission is not none %}
+      <p class="small">
+        {{ t.annual_emission }} <strong>{{ power_kw }} kW</strong>,
+        {{ t.annual_emission_2 }}
+        <strong>{{ annual_emission }} kgCO₂/an</strong>.
+      </p>
+    {% endif %}
+
+    {% if trees_needed is not none %}
+      <p class="small">
+        {{ t.trees }}
+        <strong>{{ trees_needed }} {{ t.trees_2 }}</strong>
+        {{ t.trees_3 }}
+      </p>
+    {% endif %}
+
+  </section>
+  {% endif %}
+
+</main>
+
+<footer>
+  <p>{{ t.footer }}</p>
+</footer>
+
+<script>
+  // Thèmes UI (front only) : stocke le choix et applique un data-theme sur <html>
+  (function () {
+    const STORAGE_KEY = "cf_theme";
+    const html = document.documentElement;
+    const select = document.getElementById("theme");
+
+    function applyTheme(theme) {
+      const t = (theme || "agathe").toString();
+      html.setAttribute("data-theme", t);
+    }
+
+    const saved = localStorage.getItem(STORAGE_KEY);
+    applyTheme(saved || "agathe");
+    if (select) select.value = saved || "agathe";
+
+    if (select) {
+      select.addEventListener("change", (e) => {
+        const theme = e.target.value;
+        localStorage.setItem(STORAGE_KEY, theme);
+        applyTheme(theme);
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

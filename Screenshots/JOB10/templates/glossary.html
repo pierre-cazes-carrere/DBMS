@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{% if lang == 'ar' %}rtl{% else %}ltr{% endif %}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ page_title }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+  <div class="card-title-row">
+    <div>
+      <h1>{{ page_title }}</h1>
+      <p class="subtitle">
+        {% if lang == 'en' %}
+          Simple definitions of the main terms used on the carbon footprint
+          electricity dashboard.
+        {% elif lang == 'ar' %}
+          تعاريف مبسّطة لأهم المصطلحات المستخدمة في لوحة متابعة البصمة الكربونية
+          المرتبطة بإنتاج الكهرباء.
+        {% else %}
+          Définitions simples des principaux termes utilisés sur le tableau de bord
+          d'empreinte carbone lié à la production d'électricité.
+        {% endif %}
+      </p>
+    </div>
+    <form method="get">
+      <label for="lang" class="sr-only">Langue</label>
+      <select id="lang" name="lang" onchange="this.form.submit()">
+        <option value="fr" {% if lang == 'fr' %}selected{% endif %}>Français</option>
+        <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
+        <option value="ar" {% if lang == 'ar' %}selected{% endif %}>العربية</option>
+      </select>
+    </form>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <div class="card-title-row">
+      <h2>
+        {% if lang == 'en' %}Power and energy units{% elif lang == 'ar' %}وحدات القدرة والطاقة{% else %}Unités de puissance et d'énergie{% endif %}
+      </h2>
+      <a href="{{ url_for('index', lang=lang) }}" class="btn-link">
+        {% if lang == 'en' %}← Back to dashboard{% elif lang == 'ar' %}← العودة إلى لوحة المتابعة{% else %}← Retour au tableau de bord{% endif %}
+      </a>
+    </div>
+
+    <div class="definition-list">
+      <div class="definition-item">
+        <h3>Watt (W)</h3>
+        <p>
+          {% if lang == 'en' %}
+            The watt is the unit of power. It indicates how much energy is
+            consumed or produced <strong>at a given moment</strong>. For example,
+            a 60&nbsp;W light bulb uses 60&nbsp;watts when it is on.
+          {% elif lang == 'ar' %}
+            الواط هو وحدة القدرة. يعبّر عن كمية الطاقة المستهلكة أو المنتَجة
+            <strong>في لحظة معينة</strong>. على سبيل المثال، المصباح بقدرة
+            60&nbsp;W يستهلك 60&nbsp;واط عندما يكون مشغّلاً.
+          {% else %}
+            Le watt est l'unité de puissance. Il indique la quantité d'énergie
+            consommée ou produite <strong>à un instant donné</strong>.
+            Par exemple, une ampoule de 60&nbsp;W consomme 60&nbsp;watts lorsqu'elle est allumée.
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="definition-item">
+        <h3>Kilowatt (kW)</h3>
+        <p>
+          {% if lang == 'en' %}
+            1&nbsp;kW = 1000&nbsp;W. We use kilowatts for higher power levels,
+            for example for electric heaters or EV charging stations.
+          {% elif lang == 'ar' %}
+            1&nbsp;kW = 1000&nbsp;W. نستخدم الكيلوواط للقدرات الأكبر،
+            مثل قدرة جهاز التدفئة الكهربائي أو محطة شحن السيارات الكهربائية.
+          {% else %}
+            1&nbsp;kW = 1000&nbsp;W. On utilise le kilowatt pour parler de puissances
+            un peu plus grandes, par exemple la puissance d'un chauffage électrique
+            ou d'une borne de recharge de véhicule électrique.
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="definition-item">
+        <h3>Kilowattheure (kWh)</h3>
+        <p>
+          {% if lang == 'en' %}
+            The kilowatt‑hour is a <strong>quantity of energy</strong>. This is
+            what your electricity bill measures. 1&nbsp;kWh is 1&nbsp;kW used
+            for 1&nbsp;hour. For example, a 1000&nbsp;W device running for
+            1&nbsp;hour uses 1&nbsp;kWh.
+          {% elif lang == 'ar' %}
+            الكيلوواط‑ساعة هو <strong>كمية من الطاقة</strong>. هذا ما تقيسه
+            فاتورة الكهرباء. 1&nbsp;kWh تعني استخدام قدرة 1&nbsp;kW لمدة ساعة
+            واحدة. على سبيل المثال، جهاز بقدرة 1000&nbsp;W يعمل لمدة ساعة
+            واحدة يستهلك 1&nbsp;kWh.
+          {% else %}
+            Le kilowattheure est une <strong>quantité d'énergie</strong>. C'est ce
+            que mesure votre facture d'électricité. 1&nbsp;kWh correspond à une
+            puissance de 1&nbsp;kW utilisée pendant 1&nbsp;heure.
+            Par exemple, un appareil de 1000&nbsp;W utilisé pendant 1&nbsp;heure
+            consomme 1&nbsp;kWh.
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="definition-item">
+        <h3>
+          {% if lang == 'en' %}Carbon intensity (gCO₂/kWh){% elif lang == 'ar' %}كثافة الكربون (gCO₂/kWh){% else %}Intensité carbone (gCO₂/kWh){% endif %}
+        </h3>
+        <p>
+          {% if lang == 'en' %}
+            The amount of CO₂ emitted to produce <strong>1&nbsp;kWh</strong> of
+            electricity. The higher this value, the more carbon‑intensive the
+            electricity is.
+          {% elif lang == 'ar' %}
+            هي كمية CO₂ المنبعثة لإنتاج <strong>1&nbsp;kWh</strong> من الكهرباء.
+            كلما زادت هذه القيمة، كانت الكهرباء أكثر «كربونية».
+          {% else %}
+            C'est la quantité de dioxyde de carbone émise pour produire
+            <strong>1&nbsp;kWh</strong> d'électricité. Plus cette valeur est élevée,
+            plus l'électricité est «&nbsp;carbonée&nbsp;».
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>
+      {% if lang == 'en' %}Electricity generation sources{% elif lang == 'ar' %}مصادر إنتاج الكهرباء{% else %}Sources de production d'électricité{% endif %}
+    </h2>
+
+    <div class="definition-list two-columns">
+      <div class="definition-item">
+        <h3>
+          {% if lang == 'en' %}Coal (%) {% elif lang == 'ar' %}الفحم (%) {% else %}Charbon (%) {% endif %}
+        </h3>
+        <p>
+          {% if lang == 'en' %}
+            Share of electricity generated from coal‑fired power plants.
+            Coal is one of the most CO₂‑intensive sources per kWh.
+          {% elif lang == 'ar' %}
+            نسبة الكهرباء المولَّدة من محطات تعمل بالفحم.
+            الفحم من أكثر المصادر إصداراً لـ CO₂ لكل kWh منتَج.
+          {% else %}
+            Part de l'électricité produite à partir de centrales au charbon.
+            Le charbon est l'une des sources les plus émettrices de CO₂
+            par kWh produit.
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="definition-item">
+        <h3>
+          {% if lang == 'en' %}Gas (%) {% elif lang == 'ar' %}الغاز (%) {% else %}Gaz (%) {% endif %}
+        </h3>
+        <p>
+          {% if lang == 'en' %}
+            Electricity generated from natural gas power plants. Less CO₂‑intensive
+            than coal, but still a fossil fuel.
+          {% elif lang == 'ar' %}
+            الكهرباء المولَّدة من محطات تعمل بالغاز الطبيعي.
+            أقل انبعاثاً من الفحم، لكنها تظلّ طاقة أحفورية.
+          {% else %}
+            Électricité produite à partir de centrales au gaz naturel.
+            Moins émettrice que le charbon, mais reste une énergie fossile.
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="definition-item">
+        <h3>
+          {% if lang == 'en' %}Oil (%) {% elif lang == 'ar' %}النفط (%) {% else %}Pétrole (%) {% endif %}
+        </h3>
+        <p>
+          {% if lang == 'en' %}
+            Share of electricity generated using petroleum products (fuel oil,
+            diesel, etc.). CO₂ emissions are high, comparable to or higher
+            than coal depending on the use.
+          {% elif lang == 'ar' %}
+            نسبة الكهرباء المولَّدة باستخدام مشتقات النفط (الفيول، الديزل، إلخ).
+            انبعاثات CO₂ مرتفعة، وقد تكون مماثلة أو أعلى من الفحم حسب الاستخدام.
+          {% else %}
+            Part d'électricité produite à partir de produits pétroliers
+            (fioul, diesel, etc.). Les émissions de CO₂ sont élevées,
+            comparables ou supérieures au charbon selon les usages.
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="definition-item">
+        <h3>
+          {% if lang == 'en' %}Hydro (%) {% elif lang == 'ar' %}كهرومائي (%) {% else %}Hydro (%) {% endif %}
+        </h3>
+        <p>
+          {% if lang == 'en' %}
+            Share of electricity generated from <strong>hydropower</strong>
+            (dams, run‑of‑river plants). Direct CO₂ emissions per kWh are
+            very low.
+          {% elif lang == 'ar' %}
+            نسبة الكهرباء المولَّدة من <strong>الطاقة الكهرومائية</strong>
+            (السدود، المحطات النهرية). الانبعاثات المباشرة لـ CO₂ لكل kWh
+            منخفضة جداً.
+          {% else %}
+            Part de l'électricité produite grâce à l'<strong>hydroélectricité</strong>
+            (barrages, centrales au fil de l'eau). Les émissions directes de CO₂
+            par kWh sont très faibles.
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="definition-item">
+        <h3>
+          {% if lang == 'en' %}Renewables (%) {% elif lang == 'ar' %}متجددة (%) {% else %}Renouvelable (%) {% endif %}
+        </h3>
+        <p>
+          {% if lang == 'en' %}
+            Share of <strong>renewable energy</strong> excluding hydro:
+            mainly solar and wind. Life‑cycle CO₂ emissions are low compared
+            to fossil fuels.
+          {% elif lang == 'ar' %}
+            نسبة <strong>الطاقة المتجددة</strong> باستثناء الكهرومائية:
+            خاصة الطاقة الشمسية وطاقة الرياح. انبعاثات CO₂ على كامل دورة الحياة
+            منخفضة مقارنة بالطاقات الأحفورية.
+          {% else %}
+            Part des <strong>énergies renouvelables</strong> hors hydro&nbsp;:
+            principalement solaire et éolien. Les émissions de CO₂ sur le cycle
+            de vie sont faibles par rapport aux énergies fossiles.
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="definition-item">
+        <h3>
+          {% if lang == 'en' %}Nuclear (%) {% elif lang == 'ar' %}نووي (%) {% else %}Nucléaire (%) {% endif %}
+        </h3>
+        <p>
+          {% if lang == 'en' %}
+            Share of electricity generated from nuclear power plants. Direct
+            CO₂ emissions per kWh are very low, but there are other issues
+            (waste management, safety, etc.).
+          {% elif lang == 'ar' %}
+            نسبة الكهرباء المولَّدة من محطات نووية. الانبعاثات المباشرة لـ CO₂
+            لكل kWh منخفضة جداً، لكن توجد تحديات أخرى (النفايات، السلامة، إلخ).
+          {% else %}
+            Part de l'électricité produite à partir de centrales nucléaires.
+            Les émissions de CO₂ directes sont très faibles par kWh, mais
+            la technologie pose d'autres enjeux (déchets, sûreté, etc.).
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>
+      {% if lang == 'en' %}Other useful concepts{% elif lang == 'ar' %}مفاهيم أخرى مفيدة{% else %}Autres notions utiles{% endif %}
+    </h2>
+    <div class="definition-list">
+      <div class="definition-item">
+        <h3>
+          {% if lang == 'en' %}Power mix{% elif lang == 'ar' %}المزيج الكهربائي{% else %}Mix électrique{% endif %}
+        </h3>
+        <p>
+          {% if lang == 'en' %}
+            The share of each source used to generate electricity (coal, gas,
+            oil, hydro, renewables, nuclear). The power mix directly affects
+            carbon intensity.
+          {% elif lang == 'ar' %}
+            توزيع مصادر إنتاج الكهرباء (الفحم، الغاز، النفط، الكهرومائي،
+            المتجددة، النووي). يؤثّر المزيج الكهربائي مباشرة في كثافة الكربون.
+          {% else %}
+            Répartition entre les différentes sources de production d'électricité
+            (charbon, gaz, pétrole, hydro, renouvelables, nucléaire).
+            Le mix électrique influence directement l'intensité carbone.
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="definition-item">
+        <h3>
+          {% if lang == 'en' %}Emission factor{% elif lang == 'ar' %}عامل الانبعاث{% else %}Facteur d'émission{% endif %}
+        </h3>
+        <p>
+          {% if lang == 'en' %}
+            Average amount of CO₂ emitted per kWh for a given source.
+            Example: around 820&nbsp;gCO₂/kWh for coal, 490&nbsp;gCO₂/kWh
+            for gas, or ~12&nbsp;gCO₂/kWh for nuclear.
+          {% elif lang == 'ar' %}
+            كمية CO₂ المتوسطة المنبعثة لكل kWh لمصدر معيّن.
+            مثال: حوالي 820&nbsp;gCO₂/kWh للفحم، 490&nbsp;gCO₂/kWh للغاز،
+            أو ~12&nbsp;gCO₂/kWh للطاقة النووية.
+          {% else %}
+            Quantité moyenne de CO₂ émise par kWh pour une source donnée.
+            Exemple&nbsp;: environ 820&nbsp;gCO₂/kWh pour le charbon,
+            490&nbsp;gCO₂/kWh pour le gaz, ou ~12&nbsp;gCO₂/kWh pour le nucléaire.
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="definition-item">
+        <h3>
+          {% if lang == 'en' %}Carbon offsetting{% elif lang == 'ar' %}تعويض الكربون{% else %}Compensation carbone{% endif %}
+        </h3>
+        <p>
+          {% if lang == 'en' %}
+            Actions that aim to “offset” unavoidable CO₂ emissions, for example
+            by planting trees or financing emission‑reduction projects elsewhere.
+          {% elif lang == 'ar' %}
+            إجراءات تهدف إلى «تعويض» الانبعاثات غير القابلة للتقليل، مثل
+            زراعة الأشجار أو تمويل مشاريع خفض الانبعاثات في أماكن أخرى.
+          {% else %}
+            Action qui vise à «&nbsp;compenser&nbsp;» des émissions de CO₂
+            incompressibles, par exemple via la plantation d'arbres ou des
+            projets de réduction d'émissions ailleurs.
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Glossaire – Projet CarbonFootprint</p>
+</footer>
+
+</body>
+</html>
+

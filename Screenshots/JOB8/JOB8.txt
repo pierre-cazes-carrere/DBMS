@@ -1,0 +1,111 @@
+CREATE DATABASE IF NOT EXISTS SomeCompany;
+USE SomeCompany;
+
+CREATE TABLE Departments (
+    department_id     INT PRIMARY KEY,
+    department_name   VARCHAR(100),
+    department_head   INT,
+    location          VARCHAR(100)
+);
+
+CREATE TABLE Employees (
+    employee_id   INT PRIMARY KEY,
+    first_name    VARCHAR(50),
+    last_name     VARCHAR(50),
+    birthdate     DATE,
+    position      VARCHAR(100),
+    department_id INT,
+    FOREIGN KEY (department_id) REFERENCES Departments(department_id)
+);
+
+CREATE TABLE Projects (
+    project_id    INT PRIMARY KEY,
+    project_name  VARCHAR(100),
+    start_date    DATE,
+    end_date      DATE,
+    department_id INT,
+    FOREIGN KEY (department_id) REFERENCES Departments(department_id)
+);
+
+INSERT INTO Departments (department_id, department_name, department_head, location) VALUES
+(1, 'IT',                 11, 'Headquarters'),
+(2, 'Project Management',  2, 'Branch Office West'),
+(3, 'Human Resources',     6, 'Branch Office East');
+
+INSERT INTO Employees (employee_id, first_name, last_name, birthdate, position, department_id) VALUES
+(1,  'John',    'Doe',      '1990-05-15', 'Software Engineer',      1),
+(2,  'Jane',    'Smith',    '1985-08-20', 'Project Manager',        2),
+(3,  'Mike',    'Johnson',  '1992-03-10', 'Data Analyst',           1),
+(4,  'Emily',   'Brown',    '1988-12-03', 'UX Designer',            1),
+(5,  'Alex',    'Williams', '1995-06-28', 'Software Developer',     1),
+(6,  'Sarah',   'Miller',   '1987-09-18', 'HR Specialist',          3),
+(7,  'Ethan',   'Clark',    '1991-02-14', 'Database Administrator', 1),
+(8,  'Olivia',  'Garcia',   '1984-07-22', 'Marketing Manager',      2),
+(9,  'Emilia',  'Clark',    '1986-01-12', 'HR Manager',             3),
+(10, 'Daniel',  'Taylor',   '1993-11-05', 'Systems Analyst',        1),
+(11, 'William', 'Lee',      '1994-08-15', 'Software Engineer',      1),
+(12, 'Sophia',  'Baker',    '1990-06-25', 'IT Manager',             2);
+
+INSERT INTO Projects (project_id, project_name, start_date, end_date, department_id) VALUES
+(1, 'Migration DB',      '2024-01-01', '2024-03-31', 1),
+(2, 'New Website',       '2024-02-01', '2024-05-30', 1),
+(3, 'Client Onboarding', '2024-01-15', '2024-04-15', 2),
+(4, 'Recruitment 2024',  '2024-03-01', '2024-06-30', 3),
+(5, 'Brand Campaign',    '2024-04-01', '2024-08-31', 2);
+
+-- 5. Nom et poste de tous les employés
+SELECT first_name, last_name, position
+FROM Employees;
+
+-- 6. Mettre à jour le poste d’un employé (exemple : id = 5)
+UPDATE Employees
+SET position = 'Senior Software Developer'
+WHERE employee_id = 5;
+
+-- 7. Supprimer un employé (exemple : id = 9)
+DELETE FROM Employees
+WHERE employee_id = 9;
+
+-- 8. Nom, département et bureau de chaque employé
+SELECT e.first_name,
+       e.last_name,
+       d.department_name,
+       d.location
+FROM Employees AS e
+JOIN Departments AS d
+  ON e.department_id = d.department_id;
+
+-- 9. Membres de l’équipe IT
+SELECT e.*
+FROM Employees e
+JOIN Departments d ON e.department_id = d.department_id
+WHERE d.department_name = 'IT';
+
+-- 9. Membres de Project Management
+SELECT e.*
+FROM Employees e
+JOIN Departments d ON e.department_id = d.department_id
+WHERE d.department_name = 'Project Management';
+
+-- 9. Membres de Human Resources
+SELECT e.*
+FROM Employees e
+JOIN Departments d ON e.department_id = d.department_id
+WHERE d.department_name = 'Human Resources';
+
+-- 10. Départements + managers
+SELECT d.department_name,
+       d.location,
+       m.first_name AS manager_first_name,
+       m.last_name  AS manager_last_name
+FROM Departments d
+LEFT JOIN Employees m
+  ON d.department_head = m.employee_id
+ORDER BY d.department_name;
+
+-- 12. Nombre de projets par département (productivité)
+SELECT d.department_name,
+       COUNT(p.project_id) AS nb_projects
+FROM Departments d
+LEFT JOIN Projects p ON d.department_id = p.department_id
+GROUP BY d.department_id, d.department_name;

@@ -1,0 +1,115 @@
+Tes captures confirment bien la structure attendue pour game, goal, eteam (Job 7) et pour Employees / Departments (Job 8).​
+
+Requêtes finales Job 7 (base UEFA EURO 2012)
+Cardinalités (déjà vues) :
+
+game (id) 1 — 0..* goal (matchid)
+
+eteam (id) 1 — 0..* game.team1 et game.team2
+
+eteam (id) 1 — 0..* goal.teamid.​
+
+Buts marqués par l’Allemagne : numéro de match + nom du joueur
+
+sql
+SELECT matchid, player
+FROM goal
+WHERE teamid = 'GER';
+Colonnes id, stadium, team1, team2 pour le match 1012
+
+sql
+SELECT id, stadium, team1, team2
+FROM game
+WHERE id = 1012;
+Player, teamid, stadium, mdate pour chaque but allemand
+
+sql
+SELECT g.player,
+       g.teamid,
+       ga.stadium,
+       ga.mdate
+FROM game AS ga
+JOIN goal AS g
+  ON ga.id = g.matchid
+WHERE g.teamid = 'GER';
+team1, team2, player pour chaque but d’un joueur nommé Mario
+
+sql
+SELECT ga.team1,
+       ga.team2,
+       g.player
+FROM game AS ga
+JOIN goal AS g
+  ON ga.id = g.matchid
+WHERE g.player LIKE 'Mario%';
+Jointure goal–eteam sur id–teamid
+
+sql
+SELECT g.matchid,
+       g.teamid,
+       e.teamname,
+       g.player,
+       g.gtime
+FROM goal AS g
+JOIN eteam AS e
+  ON g.teamid = e.id;
+player, teamid, coach, gtime pour les buts dans les 10 premières minutes
+
+sql
+SELECT g.player,
+       g.teamid,
+       e.coach,
+       g.gtime
+FROM goal AS g
+JOIN eteam AS e
+  ON g.teamid = e.id
+WHERE g.gtime <= 10;
+Dates des matches + nom de l’équipe dont Fernando Santos est coach de team1
+
+sql
+SELECT ga.mdate,
+       e.teamname
+FROM game AS ga
+JOIN eteam AS e
+  ON ga.team1 = e.id
+WHERE e.coach = 'Fernando Santos';
+Joueurs pour chaque but dans un match joué au National Stadium, Warsaw
+
+sql
+SELECT g.player,
+       g.teamid,
+       g.matchid,
+       g.gtime
+FROM game AS ga
+JOIN goal AS g
+  ON ga.id = g.matchid
+WHERE ga.stadium = 'National Stadium, Warsaw';
+Nombre total de buts par équipe
+
+sql
+SELECT teamid,
+       COUNT(*) AS total_goals
+FROM goal
+GROUP BY teamid;
+Stades et nombre de buts marqués dans chacun
+
+sql
+SELECT ga.stadium,
+       COUNT(*) AS total_goals
+FROM game AS ga
+JOIN goal AS g
+  ON ga.id = g.matchid
+GROUP BY ga.stadium;
+Pour chaque match où FRA a marqué : id, date, nombre de buts FRA
+
+sql
+SELECT ga.id,
+       ga.mdate,
+       COUNT(*) AS goals_FRA
+FROM game AS ga
+JOIN goal AS g
+  ON ga.id = g.matchid
+WHERE g.teamid = 'FRA'
+GROUP BY ga.id, ga.mdate
+ORDER BY ga.mdate, ga.id;
+Si tu veux, on fait maintenant la même chose pour le script complet job8.sql avec Employees, Departments et la table Projects que tu as en capture
